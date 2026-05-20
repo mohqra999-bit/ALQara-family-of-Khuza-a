@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إدارة وتوثيق بيانات العائلة</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #fbf9f4;
+            --primary-gold: #c5a059;
+            --dark-green: #243629;
+            --card-bg: #f4eee1;
+            --white: #ffffff;
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: 'Tajawal', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--dark-green);
+            padding: 15px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .phone-wrapper {
+            width: 100%;
+            max-width: 450px;
+        }
+
+        .header-actions {
+            display: flex;
+            justify-content: flex-start;
+            margin-bottom: 20px;
+        }
+
+        .btn-logout {
+            background-color: var(--primary-gold);
+            color: var(--white);
+            border: none;
+            padding: 8px 20px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .main-card {
+            background-color: var(--white);
+            border-radius: 15px;
+            padding: 25px 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            margin-bottom: 20px;
+        }
+
+        .welcome-section {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .welcome-text {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: var(--primary-gold);
+            line-height: 1.4;
+        }
+        
+        .welcome-text span {
+            color: var(--dark-green);
+            font-size: 1.2rem;
+        }
+
+        .user-icon {
+            width: 45px;
+            height: 45px;
+            background-color: var(--dark-green);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--white);
+            font-size: 1.2rem;
+        }
+
+        .divider {
+            border: 0;
+            height: 2px;
+            background-color: var(--primary-gold);
+            opacity: 0.5;
+            margin-bottom: 20px;
+        }
+
+        /* القوائم المنسدلة */
+        .accordion-item {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .accordion-content {
+            background-color: #faf8f5;
+            padding: 15px;
+            margin-bottom: 12px;
+            border-radius: 0 0 10px 10px;
+            border: 1px solid var(--card-bg);
+            display: none; /* مخفي افتراضياً */
+        }
+
+        .form-group {
+            margin-bottom: 12px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+
+        .btn-save {
+            background-color: var(--dark-green);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            width: 100%;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+
+        .arrow {
+            transition: transform 0.3s;
+        }
+
+        .active .arrow {
+            transform: rotate(180deg);
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 1.4rem;
+            color: var(--dark-green);
+            margin-bottom: 25px;
+            font-weight: 700;
+        }
+
+        .sub-title {
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        /* بطاقات الأبناء */
+        .child-card {
+            background-color: #faf7f0;
+            border-right: 5px solid var(--dark-green);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            position: relative;
+        }
+
+        .child-name {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .child-gender {
+            font-size: 0.9rem;
+            color: #777;
+            margin-bottom: 10px;
+        }
+
+        .child-info {
+            font-size: 1rem;
+            margin-bottom: 5px;
+        }
+
+        .child-age {
+            color: var(--primary-gold);
+            font-weight: bold;
+            margin-top: 8px;
+        }
+
+        .verified-badge {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            width: 24px;
+            height: 24px;
+            background-color: #00a65a;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 0.8rem;
+        }
+
+        .card-actions {
+            margin-top: 10px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-edit, .btn-delete {
+            padding: 5px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .btn-edit { background-color: #f0ad4e; color: white; }
+        .btn-delete { background-color: #d9534f; color: white; }
+
+        .btn-add-child {
+            background-color: var(--primary-gold);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            width: 100%;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="phone-wrapper">
+
+    <div class="header-actions">
+        <button class="btn-logout">تسجيل الخروج</button>
+    </div>
+
+    <div class="main-card">
+        <div class="welcome-section">
+            <div class="welcome-text">
+                <span>مرحباً بك:</span><br>
+                <span id="display-father-name">سهيل احمد خليل ابو رجيلة</span>
+            </div>
+            <div class="user-icon">👤</div>
+        </div>
+
+        <hr class="divider">
+
+        <div class="accordion-item" onclick="toggleAccordion('personal-sec', this)">
+            <span>البيانات الشخصية، الزوجة والنزوح</span>
+            <span class="arrow">▼</span>
+        </div>
+        <div class="accordion-content" id="personal-sec">
+            <div class="form-group">
+                <label>اسم رب الأسرة الكامل:</label>
+                <input type="text" id="input-father-name" value="سهيل احمد خليل ابو رجيلة">
+            </div>
+            <div class="form-group">
+                <label>اسم الزوجة:</label>
+                <input type="text" placeholder="أدخل اسم الزوجة">
+            </div>
+            <button class="btn-save" onclick="saveFatherName()">حفظ التعديلات</button>
+        </div>
+
+        <div class="accordion-item" onclick="toggleAccordion('contact-sec', this)">
+            <span>بيانات الاتصال والطوارئ</span>
+            <span class="arrow">▼</span>
+        </div>
+        <div class="accordion-content" id="contact-sec">
+            <div class="form-group">
+                <label>رقم الهاتف الحالي:</label>
+                <input type="tel" value="0599000000">
+            </div>
+            <div class="form-group">
+                <label>مكان النزوح / السكن الحالي:</label>
+                <input type="text" placeholder="المدينة / الحي">
+            </div>
+            <button class="btn-save" onclick="alert('تم حفظ بيانات الاتصال بنجاح')">حفظ</button>
+        </div>
+
+        <div class="accordion-item" onclick="toggleAccordion('bank-sec', this)">
+            <span>البيانات البنكية للدعم والمعاملات</span>
+            <span class="arrow">▼</span>
+        </div>
+        <div class="accordion-content" id="bank-sec">
+            <div class="form-group">
+                <label>اسم البنك:</label>
+                <input type="text" placeholder="مثال: بنك فلسطين">
+            </div>
+            <div class="form-group">
+                <label>رقم الحساب أو الـ IBAN:</label>
+                <input type="text" placeholder="رقم الحساب البنكي">
+            </div>
+            <button class="btn-save" onclick="alert('تم حفظ البيانات البنكية بنجاح')">حفظ</button>
+        </div>
+    </div>
+
+
+    <div class="main-card">
+        <div class="section-title">👥 إدارة وتوثيق بيانات الأبناء</div>
+        <hr class="divider">
+        <div class="sub-title">الأبناء المدرجين حالياً في النظام:</div>
+
+        <div id="children-container">
+            <div class="child-card" id="child-1">
+                <div class="verified-badge">✓</div>
+                <div class="child-name">جنى سهيل أحمد أبو رجيلة</div>
+                <div class="child-gender">(أنثى)</div>
+                <div class="child-info">🪪 هوية: 433398740</div>
+                <div class="child-info">📅 الميلاد: 2013-01-08</div>
+                <div class="child-age">⏳ العمر الحالي: 13 سنة</div>
+                <div class="card-actions">
+                    <button class="btn-edit" onclick="editChild('child-1')">تعديل</button>
+                    <button class="btn-delete" onclick="deleteChild('child-1')">حذف</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="add-child-form" style="display:none; background:#f9f9f9; padding:15px; border-radius:8px; margin-top:15px; border:1px dashed var(--primary-gold);">
+            <h4 style="margin-bottom:10px;">إضافة بيانات ابن جديد:</h4>
+            <div class="form-group"><label>الاسم الكامل:</label><input type="text" id="new-name"></div>
+            <div class="form-group">
+                <label>الجنس:</label>
+                <select id="new-gender"><option value="ذكر">ذكر</option><option value="أنثى">أنثى</option></select>
+            </div>
+            <div class="form-group"><label>رقم الهوية:</label><input type="text" id="new-id"></div>
+            <div class="form-group"><label>تاريخ الميلاد:</label><input type="date" id="new-date"></div>
+            <button class="btn-save" onclick="submitNewChild()">إدراج في النظام</button>
+        </div>
+
+        <button class="btn-add-child" id="toggle-add-btn" onclick="showAddForm()">إضافة ابن جديد +</button>
+    </div>
+
+</div>
+
+<script>
+    // دالة فتح وإغلاق القوائم المنسدلة
+    function toggleAccordion(id, element) {
+        var content = document.getElementById(id);
+        if (content.style.display === "block") {
+            content.style.display = "none";
+            element.classList.remove("active");
+        } else {
+            content.style.display = "block";
+            element.classList.add("active");
+        }
+    }
+
+    // دالة لتعديل اسم رب الأسرة وعكسه في الترحيب علوياً
+    function saveFatherName() {
+        var newName = document.getElementById('input-father-name').value;
+        document.getElementById('display-father-name').innerText = newName;
+        alert('تم تحديث اسم رب الأسرة بنجاح!');
+    }
+
+    // إظهار نموذج إضافة ابن جديد
+    function showAddForm() {
+        var form = document.getElementById('add-child-form');
+        if(form.style.display === "none") {
+            form.style.display = "block";
+            document.getElementById('toggle-add-btn').innerText = "إلغاء الإضافة";
+        } else {
+            form.style.display = "none";
+            document.getElementById('toggle-add-btn').innerText = "إضافة ابن جديد +";
+        }
+    }
+
+    // دالة إضافة ابن جديد ديناميكياً وحساب عمره
+    function submitNewChild() {
+        var name = document.getElementById('new-name').value;
+        var gender = document.getElementById('new-gender').value;
+        var idNum = document.getElementById('new-id').value;
+        var birthDate = document.getElementById('new-date').value;
+
+        if(!name || !idNum || !birthDate) {
+            alert('الرجاء تعبئة كافة حقول الابن!');
+            return;
+        }
+
+        // حساب العمر بشكل تقريبي بناء على تاريخ الميلاد
+        var birthYear = new Date(birthDate).getFullYear();
+        var currentYear = new Date().getFullYear();
+        var age = currentYear - birthYear;
+
+        var childId = 'child-' + Date.now(); // إنشاء ID فريد
+
+        // بناء كود البطاقة الجديدة للابن
+        var cardHTML = `
+            <div class="child-card" id="${childId}">
+                <div class="verified-badge">✓</div>
+                <div class="child-name">${name}</div>
+                <div class="child-gender">(${gender})</div>
+                <div class="child-info">🪪 هوية: ${idNum}</div>
+                <div class="child-info">📅 الميلاد: ${birthDate}</div>
+                <div class="child-age">⏳ العمر الحالي: ${age} سنة</div>
+                <div class="card-actions">
+                    <button class="btn-edit" onclick="editChild('${childId}')">تعديل</button>
+                    <button class="btn-delete" onclick="deleteChild('${childId}')">حذف</button>
+                </div>
+            </div>
+        `;
+
+        // إضافة البطاقة في الحاوية الرئيسية
+        document.getElementById('children-container').insertAdjacentHTML('beforeend', cardHTML);
+
+        // تنظيف الحقول وإخفاء النموذج
+        document.getElementById('new-name').value = '';
+        document.getElementById('new-id').value = '';
+        document.getElementById('new-date').value = '';
+        showAddForm();
+    }
+
+    // دالة حذف ابن من النظام
+    function deleteChild(id) {
+        if(confirm('هل أنت متأكد من حذف هذا الابن من النظام؟')) {
+            document.getElementById(id).remove();
+        }
+    }
+
+    // دالة تعديل بيانات ابن
+    function editChild(id) {
+        var card = document.getElementById(id);
+        var currentName = card.querySelector('.child-name').innerText;
+        var newName = prompt("قم بتعديل الاسم:", currentName);
+        if (newName != null && newName !== "") {
+            card.querySelector('.child-name').innerText = newName;
+        }
+    }
+</script>
+
+</body>
+</html>
